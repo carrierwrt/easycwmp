@@ -290,8 +290,10 @@ to attach them to the start of each source file to most effectively
 state the exclusion of warranty; and each file should have at least
 the "copyright" line and a pointer to where the full notice is found.
 
-    easycwmp is GPLv2 licensed cwmp implementation
-    Copyright (C) 2011-2012 Luka Perkov
+    easycwmp is a GPLv2 licensed cwmp implementation
+
+      Copyright (C) 2012-2014 PIVA Software
+      Copyright (C) 2011-2012 Luka Perkov
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -306,7 +308,6 @@ the "copyright" line and a pointer to where the full notice is found.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-	easycwmp Copyright (C) 2012-2014 PIVA Software
     This program comes with ABSOLUTELY NO WARRANTY.
     This is free software, and you are welcome to redistribute it
     under certain conditions.
