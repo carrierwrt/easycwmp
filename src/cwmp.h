@@ -126,13 +126,6 @@ struct cwmp_internal {
 extern struct cwmp_internal *cwmp;
 struct event_code event_code_array[__EVENT_MAX];
 
-static void cwmp_periodic_inform(struct uloop_timeout *timeout);
-static void cwmp_do_inform(struct uloop_timeout *timeout);
-static void cwmp_do_inform_retry(struct uloop_timeout *timeout);
-static inline int rpc_inform(void);
-static inline int rpc_get_rpc_methods(void);
-static inline int rpc_transfer_complete(mxml_node_t *node, int *method_id);
-
 void cwmp_add_scheduled_inform(char *key, int delay);
 void cwmp_add_download(char *key, int delay, char *file_size, char *download_url, char *file_type, char *username, char *password, mxml_node_t *node);
 void cwmp_download_launch(struct uloop_timeout *timeout);

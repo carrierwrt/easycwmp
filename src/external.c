@@ -38,6 +38,8 @@ char *external_method_instance = NULL;
 char *external_method_fault = NULL;
 static int pfds_in[2], pfds_out[2], pid;
 
+static const char * const fc_script = "/usr/sbin/easycwmp";
+
 void external_add_list_paramameter(char *param_name, char *param_data, char *param_type, char *fault_code)
 {
 	struct external_parameter *external_parameter;

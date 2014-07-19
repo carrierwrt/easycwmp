@@ -77,50 +77,6 @@ int xml_parse_get_rpc_methods_response_message(char *msg_in);
 int xml_handle_message(char *msg_in, char **msg_out);
 int xml_get_index_fault(char *fault_code);
 
-static int xml_handle_get_rpc_methods(mxml_node_t *body_in,
-					mxml_node_t *tree_in,
-					mxml_node_t *tree_out);
-static int xml_handle_set_parameter_values(mxml_node_t *body_in,
-					   mxml_node_t *tree_in,
-					   mxml_node_t *tree_out);
-
-static int xml_handle_get_parameter_values(mxml_node_t *body_in,
-					   mxml_node_t *tree_in,
-					   mxml_node_t *tree_out);
-
-static int xml_handle_get_parameter_names(mxml_node_t *body_in,
-					   mxml_node_t *tree_in,
-					   mxml_node_t *tree_out);
-
-static int xml_handle_set_parameter_attributes(mxml_node_t *body_in,
-						   mxml_node_t *tree_in,
-						   mxml_node_t *tree_out);
-
-static int xml_handle_download(mxml_node_t *body_in,
-				   mxml_node_t *tree_in,
-				   mxml_node_t *tree_out);
-
-static int xml_handle_factory_reset(mxml_node_t *body_in,
-					mxml_node_t *tree_in,
-					mxml_node_t *tree_out);
-
-static int xml_handle_reboot(mxml_node_t *body_in,
-				 mxml_node_t *tree_in,
-				 mxml_node_t *tree_out);
-static int xml_handle_get_parameter_attributes(mxml_node_t *body_in,
-					mxml_node_t *tree_in,
-					mxml_node_t *tree_out);
-static int xml_handle_schedule_inform(mxml_node_t *node,
-				 mxml_node_t *tree_in,
-				 mxml_node_t *tree_out);
-static int xml_handle_AddObject(mxml_node_t *body_in,
-		 mxml_node_t *tree_in,
-		 mxml_node_t *tree_out);
-static int xml_handle_DeleteObject(mxml_node_t *body_in,
-		 mxml_node_t *tree_in,
-		 mxml_node_t *tree_out);
-
-static void xml_do_inform(struct uloop_timeout *timeout);
 const char *xml_format_cb(mxml_node_t *node, int pos);
 char *xml_get_value_with_whitespace(mxml_node_t *b);
 mxml_node_t *xml_create_generic_fault_message(mxml_node_t *body, int code);

@@ -17,10 +17,8 @@
 
 #include "easycwmp.h"
 
-void config_exit(void);
 void config_load(void);
-int config_remove_event(char *event);
-int config_check_acs_url(void);
+void config_exit(void);
 
 struct acs {
 	char *scheme;

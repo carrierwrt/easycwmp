@@ -63,6 +63,51 @@ const static char *cwmp_urls[] = {
 
 static struct cwmp_namespaces ns;
 
+static int xml_handle_get_rpc_methods(mxml_node_t *body_in,
+					mxml_node_t *tree_in,
+					mxml_node_t *tree_out);
+static int xml_handle_set_parameter_values(mxml_node_t *body_in,
+					   mxml_node_t *tree_in,
+					   mxml_node_t *tree_out);
+
+static int xml_handle_get_parameter_values(mxml_node_t *body_in,
+					   mxml_node_t *tree_in,
+					   mxml_node_t *tree_out);
+
+static int xml_handle_get_parameter_names(mxml_node_t *body_in,
+					   mxml_node_t *tree_in,
+					   mxml_node_t *tree_out);
+
+static int xml_handle_set_parameter_attributes(mxml_node_t *body_in,
+						   mxml_node_t *tree_in,
+						   mxml_node_t *tree_out);
+
+static int xml_handle_download(mxml_node_t *body_in,
+				   mxml_node_t *tree_in,
+				   mxml_node_t *tree_out);
+
+static int xml_handle_factory_reset(mxml_node_t *body_in,
+					mxml_node_t *tree_in,
+					mxml_node_t *tree_out);
+
+static int xml_handle_reboot(mxml_node_t *body_in,
+				 mxml_node_t *tree_in,
+				 mxml_node_t *tree_out);
+static int xml_handle_get_parameter_attributes(mxml_node_t *body_in,
+					mxml_node_t *tree_in,
+					mxml_node_t *tree_out);
+static int xml_handle_schedule_inform(mxml_node_t *node,
+				 mxml_node_t *tree_in,
+				 mxml_node_t *tree_out);
+static int xml_handle_AddObject(mxml_node_t *body_in,
+		 mxml_node_t *tree_in,
+		 mxml_node_t *tree_out);
+static int xml_handle_DeleteObject(mxml_node_t *body_in,
+		 mxml_node_t *tree_in,
+		 mxml_node_t *tree_out);
+
+static void xml_do_inform(struct uloop_timeout *timeout);
+
 const struct rpc_method rpc_methods[] = {
 	{ "GetRPCMethods", xml_handle_get_rpc_methods },
 	{ "SetParameterValues", xml_handle_set_parameter_values },

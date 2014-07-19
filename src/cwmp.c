@@ -44,6 +44,9 @@ struct event_code event_code_array[] = {
 
 struct cwmp_internal *cwmp;
 
+static void cwmp_periodic_inform(struct uloop_timeout *timeout);
+static void cwmp_do_inform(struct uloop_timeout *timeout);
+
 static struct uloop_timeout inform_timer = { .cb = cwmp_do_inform };
 static struct uloop_timeout periodic_inform_timer = { .cb = cwmp_periodic_inform };
 static struct uloop_timeout inform_timer_retry = { .cb = cwmp_do_inform };

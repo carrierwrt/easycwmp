@@ -29,9 +29,15 @@
 #include "digestauth.h"
 #include "log.h"
 
+static const char * const fc_cookies = "/tmp/easycwmp_cookies";
+
 static struct http_client http_c;
 static struct http_server http_s;
-CURL *curl;
+static CURL *curl;
+
+static size_t http_get_response(void *buffer, size_t size, size_t rxed, char **msg_in);
+static void http_new_client(struct uloop_fd *ufd, unsigned events);
+static void http_del_client(struct uloop_process *uproc, int ret);
 
 int
 http_client_init(void)
