@@ -14,7 +14,7 @@ local val=""
 local permissions="1"
 case "$action" in
 	get_value)
-	val=`$UCI_GET wireless.wl0.disabled 2> /dev/null`
+	val=`$UCI_GET wireless.${uci_iface}.disabled 2> /dev/null`
 	[ "$val" = "1" ] && val="0" || val="1"
 	;;
 	get_name)
@@ -46,7 +46,7 @@ case $action in
 	set_value)
 	[ "$val" = "1" ] && val="0" || val="1"
 	execute_command_in_apply_service "wifi"
-	$UCI_SET wireless.wl0.disabled="$val"
+	$UCI_SET wireless.${uci_iface}.disabled="$val"
 	;;
 	set_notification)
 	easycwmp_set_parameter_notification "$parm" "$val"
@@ -102,12 +102,14 @@ esac
 
 add_wlan_iface() {
 	local instance=`get_max_instance`
+	local wifi_device=`$UCI_GET wireless.@wifi-iface[0].device || echo radio0`
 	local wifi_iface=`$UCI_ADD wireless wifi-iface`
-	$UCI_SET wireless.$wifi_iface.device=wl0
+	$UCI_SET wireless.$wifi_iface.device=$wifi_device
+	$UCI_SET wireless.$wifi_iface.network=lan
 	$UCI_SET wireless.$wifi_iface.encryption=none
 	$UCI_SET wireless.$wifi_iface.mode=ap
-	$UCI_SET wireless.$wifi_iface.ssid=DefaultSSID
 	$UCI_SET wireless.$wifi_iface.instance=$((++instance))
+	$UCI_SET wireless.$wifi_iface.disabled=1
 	$UCI_COMMIT
 	execute_command_in_apply_service "wifi"
 	echo $instance
@@ -216,19 +218,19 @@ case "$1" in
 	get_wlan_ssid_all "$2"
 	return 0
 	;;
-	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9]*.Enable)
+	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9].Enable)
 	get_wlan_num_and_uci_iface "$1" "InternetGatewayDevice.LANDevice.1.WLANConfiguration.{i}.Enable" num uci_iface
 	[ "$uci_iface" = "" -o "$num" = "" ] && return $E_INVALID_PARAMETER_NAME
 	get_wlan_enable "$num" "$uci_iface" "$2"
 	return $?
 	;;
-	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9]*.SSID)
+	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9].SSID)
 	get_wlan_num_and_uci_iface "$1" "InternetGatewayDevice.LANDevice.1.WLANConfiguration.{i}.SSID" num uci_iface
 	[ "$uci_iface" = "" -o "$num" = "" ] && return $E_INVALID_PARAMETER_NAME
 	get_wlan_ssid "$num" "$uci_iface" "$2"
 	return $?
 	;;
-	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9]*.)
+	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9].)
 	get_wlan_num_and_uci_iface "$1" "InternetGatewayDevice.LANDevice.1.WLANConfiguration.{i}." num uci_iface
 	[ "$uci_iface" = "" -o "$num" = "" ] && return $E_INVALID_PARAMETER_NAME
 	get_lan_device_wlan_configuration_instance "$1" "$2"
@@ -251,19 +253,19 @@ case "$1" in
 	easycwmp_set_parameter_notification "$1" "$2"
 	return 0
 	;;
-	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9]*.Enable)
+	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9].Enable)
 	get_wlan_num_and_uci_iface "$1" "InternetGatewayDevice.LANDevice.1.WLANConfiguration.{i}.Enable" num uci_iface
 	[ "$uci_iface" = "" -o "$num" = "" ] && return $E_INVALID_PARAMETER_NAME
 	set_wlan_enable "$num" "$uci_iface" "$2"
 	return 0
 	;;
-	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9]*.SSID)
+	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9].SSID)
 	get_wlan_num_and_uci_iface "$1" "InternetGatewayDevice.LANDevice.1.WLANConfiguration.{i}.SSID" num uci_iface
 	[ "$uci_iface" = "" -o "$num" = "" ] && return $E_INVALID_PARAMETER_NAME
 	set_wlan_ssid "$num" "$uci_iface" "$2"
 	return 0
 	;;
-	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9]*.)
+	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9].)
 	[ "$action" = "set_value" ] && return $E_INVALID_PARAMETER_NAME
 	get_wlan_num_and_uci_iface "$1" "InternetGatewayDevice.LANDevice.1.WLANConfiguration.{i}." num uci_iface
 	[ "$uci_iface" = "" -o "$num" = "" ] && return $E_INVALID_PARAMETER_NAME
@@ -302,7 +304,7 @@ return $E_INVALID_PARAMETER_NAME
 delete_object_lan_device() {
 local num uci_iface
 case "$1" in
-	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9]*.)
+	InternetGatewayDevice.LANDevice.1.WLANConfiguration.[0-9].)
 	get_wlan_num_and_uci_iface "$1" "InternetGatewayDevice.LANDevice.1.WLANConfiguration.{i}." num uci_iface
 	[ "$uci_iface" = "" -o "$num" = "" ] && return $E_INVALID_PARAMETER_NAME
 	delete_wlan_iface $uci_iface
