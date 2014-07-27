@@ -64,7 +64,7 @@ local param="InternetGatewayDevice.DeviceInfo.Manufacturer"
 local permissions="0"
 case "$action" in
 	get_value)
-	val=`$UCI_GET easycwmp.@device[0].manufacturer 2> /dev/null`
+	val=`cat /tmp/sysinfo/model | cut -d' ' -f1`
 	;;
 	get_name)
 	[ "$nl" = "1" ] && return $E_INVALID_ARGUMENTS
@@ -84,7 +84,7 @@ local param="InternetGatewayDevice.DeviceInfo.ManufacturerOUI"
 local permissions="0"
 case "$action" in
 	get_value)
-	val=`$UCI_GET easycwmp.@device[0].oui 2> /dev/null`
+	val=`uci get wireless.radio0.macaddr | tr 'a-f' 'A-F' | tr -d ':' | cut -c 1-6`
 	;;
 	get_name)
 	[ "$nl" = "1" ] && return $E_INVALID_ARGUMENTS
@@ -104,7 +104,7 @@ local param="InternetGatewayDevice.DeviceInfo.ProductClass"
 local permissions="0"
 case "$action" in
 	get_value)
-	val=`$UCI_GET easycwmp.@device[0].product_class 2> /dev/null`
+	val=`cat /tmp/sysinfo/board_name`
 	;;
 	get_name)
 	[ "$nl" = "1" ] && return $E_INVALID_ARGUMENTS
@@ -124,7 +124,7 @@ local param="InternetGatewayDevice.DeviceInfo.SerialNumber"
 local permissions="0"
 case "$action" in
 	get_value)
-	local val=`$UCI_GET easycwmp.@device[0].serial_number 2> /dev/null`
+	local val=`uci get wireless.radio0.macaddr | tr 'a-f' 'A-F' | tr -d ':'`
 	;;
 	get_name)
 	[ "$nl" = "1" ] && return $E_INVALID_ARGUMENTS
@@ -144,7 +144,7 @@ local param="InternetGatewayDevice.DeviceInfo.HardwareVersion"
 local permissions="0"
 case "$action" in
 	get_value)
-	val=`$UCI_GET easycwmp.@device[0].hardware_version 2> /dev/null`
+	val=`cat /tmp/sysinfo/model`
 	;;
 	get_name)
 	[ "$nl" = "1" ] && return $E_INVALID_ARGUMENTS
@@ -164,7 +164,7 @@ local param="InternetGatewayDevice.DeviceInfo.SoftwareVersion"
 local permissions="0"
 case "$action" in
 	get_value)
-	val=`$UCI_GET easycwmp.@device[0].software_version 2> /dev/null`
+	val="openwrt-`cat /etc/openwrt_version`"
 	;;
 	get_name)
 	[ "$nl" = "1" ] && return $E_INVALID_ARGUMENTS

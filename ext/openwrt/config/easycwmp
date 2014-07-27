@@ -19,14 +19,6 @@ config acs
 	option periodic_enable '1'
 	option periodic_interval '100'
 
-config device
-	option manufacturer easycwmp
-	option oui FFFFFF
-	option product_class easycwmp
-	option serial_number FFFFFF123456
-	option hardware_version example_hw_version
-	option software_version example_sw_version
-
 config scripts
 	# load OpenWrt generic network functions
 	list location /lib/functions/network.sh

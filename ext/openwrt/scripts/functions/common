@@ -366,10 +366,10 @@ easycwmp_get_inform_deviceid()
 	local msg
 	json_init
 	
-	json_add_string "manufacturer" "`$UCI_GET easycwmp.@device[0].manufacturer 2> /dev/null`"
-    json_add_string "oui" "`$UCI_GET easycwmp.@device[0].oui 2> /dev/null`"
-    json_add_string "product_class" "`$UCI_GET easycwmp.@device[0].product_class 2> /dev/null`"
-    json_add_string "serial_number" "`$UCI_GET easycwmp.@device[0].serial_number 2> /dev/null`"
+	json_add_string "manufacturer" "`cat /tmp/sysinfo/model | cut -d' ' -f1`"
+    json_add_string "oui" "`uci get wireless.radio0.macaddr | tr 'a-f' 'A-F' | tr -d ':' | cut -c 1-6`"
+    json_add_string "product_class" "`cat /tmp/sysinfo/board_name`"
+    json_add_string "serial_number" "`uci get wireless.radio0.macaddr | tr 'a-f' 'A-F' | tr -d ':'`"
     
 	json_close_object
 	local msg=`json_dump`
