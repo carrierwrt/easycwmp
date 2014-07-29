@@ -73,7 +73,7 @@ void cwmp_periodic_inform_init(void)
 {
 	uloop_timeout_cancel(&periodic_inform_timer);
 	if (config->acs->periodic_enable && config->acs->periodic_interval) {
-		log_message(NAME, L_NOTICE, "init periodic event: interval = %d\n", config->acs->periodic_interval);
+		log_message(NAME, L_DEBUG, "init periodic event: interval = %d\n", config->acs->periodic_interval);
 		uloop_timeout_set(&periodic_inform_timer, config->acs->periodic_interval * 1000);
 	}
 }
@@ -119,7 +119,7 @@ static inline void cwmp_retry_session() {
 		return;
 	cwmp->retry_count++;
 	int rtime = cwmp_retry_count_interval(cwmp->retry_count);
-	log_message(NAME, L_NOTICE, "retry session in %d sec, RetryCount = %d\n", rtime, cwmp->retry_count);
+	log_message(NAME, L_DEBUG, "retry session in %d sec, RetryCount = %d\n", rtime, cwmp->retry_count);
 	uloop_timeout_set(&inform_timer_retry, SECDTOMSEC * rtime);
 }
 
@@ -133,7 +133,7 @@ static inline int rpc_transfer_complete(mxml_node_t *node, int *method_id)
 		return -1;
 	}
 
-	log_message(NAME, L_NOTICE, "send RPC ACS TransferComplete\n");
+	log_message(NAME, L_DEBUG, "send RPC ACS TransferComplete\n");
 
 	do {
 		FREE(msg_in);
@@ -170,7 +170,7 @@ static inline int rpc_get_rpc_methods()
 		return -1;
 	}
 
-	log_message(NAME, L_NOTICE, "send RPC ACS GetRPCMethods\n");
+	log_message(NAME, L_DEBUG, "send RPC ACS GetRPCMethods\n");
 
 	do {
 		FREE(msg_in);
@@ -208,7 +208,7 @@ static inline int rpc_inform()
 		return -1;
 	}
 
-	log_message(NAME, L_NOTICE, "send Inform\n");
+	log_message(NAME, L_DEBUG, "send Inform\n");
 
 	do {
 		FREE(msg_in);
@@ -243,19 +243,19 @@ void cwmp_add_handler_end_session(int handler)
 static void cwmp_handle_end_session()
 {
 	if (cwmp->end_session & ENDS_FACTORY_RESET) {
-		log_message(NAME, L_NOTICE, "end session: factory reset\n");
+		log_message(NAME, L_DEBUG, "end session: factory reset\n");
 		external_action_simple_execute("factory_reset", NULL, NULL);
 		external_action_handle(NULL);
 		exit(EXIT_SUCCESS);
 	}
 	if (cwmp->end_session & ENDS_REBOOT) {
-		log_message(NAME, L_NOTICE, "end session: reboot\n");
+		log_message(NAME, L_DEBUG, "end session: reboot\n");
 		external_action_simple_execute("reboot", NULL, NULL);
 		external_action_handle(NULL);
 		exit(EXIT_SUCCESS);
 	}
 	if (cwmp->end_session & ENDS_RELOAD_CONFIG) {
-		log_message(NAME, L_NOTICE, "end session: config reload\n");
+		log_message(NAME, L_DEBUG, "end session: config reload\n");
 		config_load();
 	}
 	cwmp->end_session = 0;
@@ -268,7 +268,7 @@ int cwmp_inform(void)
 	mxml_node_t *node;
 	int method_id;
 
-	log_message(NAME, L_NOTICE, "start session\n");
+	log_message(NAME, L_DEBUG, "start session\n");
 	if (http_client_init()) {
 		D("initializing http client failed\n");
 		goto error;
@@ -279,10 +279,10 @@ int cwmp_inform(void)
 	}
 
 	if(rpc_inform()) {
-		log_message(NAME, L_NOTICE, "sending Inform failed\n");
+		log_message(NAME, L_WARNING, "sending Inform failed\n");
 		goto error;
 	}
-	log_message(NAME, L_NOTICE, "receive InformResponse from the ACS\n");
+	log_message(NAME, L_DEBUG, "receive InformResponse from the ACS\n");
 
 	cwmp_remove_event(EVENT_REMOVE_AFTER_INFORM, 0);
 	cwmp_clear_notifications();
@@ -290,10 +290,10 @@ int cwmp_inform(void)
 	do {
 		while((node = backup_check_transfer_complete()) && !cwmp->hold_requests) {
 			if(rpc_transfer_complete(node, &method_id)) {
-				log_message(NAME, L_NOTICE, "sending TransferComplete failed\n");
+				log_message(NAME, L_DEBUG, "sending TransferComplete failed\n");
 				goto error;
 			}
-			log_message(NAME, L_NOTICE, "receive TransferCompleteResponse from the ACS\n");
+			log_message(NAME, L_DEBUG, "receive TransferCompleteResponse from the ACS\n");
 
 			backup_remove_transfer_complete(node);
 			cwmp_remove_event(EVENT_REMOVE_AFTER_TRANSFER_COMPLETE, method_id);
@@ -302,10 +302,10 @@ int cwmp_inform(void)
 		}
 		if(cwmp->get_rpc_methods && !cwmp->hold_requests) {
 			if(rpc_get_rpc_methods()) {
-				log_message(NAME, L_NOTICE, "sending GetRPCMethods failed\n");
+				log_message(NAME, L_DEBUG, "sending GetRPCMethods failed\n");
 				goto error;
 			}
-			log_message(NAME, L_NOTICE, "receive GetRPCMethodsResponse from the ACS\n");
+			log_message(NAME, L_DEBUG, "receive GetRPCMethodsResponse from the ACS\n");
 
 			cwmp->get_rpc_methods = false;
 		}
@@ -322,7 +322,7 @@ int cwmp_inform(void)
 	cwmp_handle_end_session();
 	external_exit();
 	cwmp->retry_count = 0;
-	log_message(NAME, L_NOTICE, "end session success\n");
+	log_message(NAME, L_DEBUG, "end session success\n");
 	return 0;
 
 error:
@@ -330,7 +330,7 @@ error:
 	xml_exit();
 	cwmp_handle_end_session();
 	external_exit();
-	log_message(NAME, L_NOTICE, "end session failed\n");
+	log_message(NAME, L_DEBUG, "end session failed\n");
 	cwmp_retry_session();
 
 	return -1;
@@ -341,7 +341,7 @@ int cwmp_handle_messages(void)
 	char *msg_in, *msg_out;
 	msg_in = msg_out = NULL;
 
-	log_message(NAME, L_NOTICE, "send empty message to the ACS\n");
+	log_message(NAME, L_DEBUG, "send empty message to the ACS\n");
 
 	while (1) {
 		FREE(msg_in);
@@ -352,20 +352,20 @@ int cwmp_handle_messages(void)
 		}
 
 		if (!msg_in) {
-			log_message(NAME, L_NOTICE, "receive empty message from the ACS\n");
+			log_message(NAME, L_DEBUG, "receive empty message from the ACS\n");
 			break;
 		}
 
 		FREE(msg_out);
 
 		if (xml_handle_message(msg_in, &msg_out)) {
-			log_message(NAME, L_NOTICE, "handling message failed\n");
+			log_message(NAME, L_DEBUG, "handling message failed\n");
 			D("xml handling message failed\n");
 			goto error;
 		}
 
 		if (!msg_out) {
-			log_message(NAME, L_NOTICE, "handling message failed\n");
+			log_message(NAME, L_DEBUG, "handling message failed\n");
 			D("acs response message is empty\n");
 			goto error;
 		}
@@ -407,7 +407,7 @@ void cwmp_add_scheduled_inform(char *key, int delay)
 
 	s = calloc(1, sizeof(*s));
 	if (!s) return;
-	log_message(NAME, L_NOTICE, "scheduled inform in %d sec\n", delay);
+	log_message(NAME, L_DEBUG, "scheduled inform in %d sec\n", delay);
 	s->key = key ? strdup(key) : NULL;
 	s->handler_timer.cb = cwmp_scheduled_inform;
 	list_add_tail(&s->list, &cwmp->scheduled_informs);
@@ -434,7 +434,7 @@ void cwmp_download_launch(struct uloop_timeout *timeout)
 
 	d = container_of(timeout, struct download, handler_timer);
 
-	log_message(NAME, L_NOTICE, "start download url = %s, FileType = '%s', CommandKey = '%s'\n",
+	log_message(NAME, L_DEBUG, "start download url = %s, FileType = '%s', CommandKey = '%s'\n",
 			d->download_url, d->file_type, d->key);
 
 	if (external_init()) {
@@ -484,7 +484,7 @@ void cwmp_download_launch(struct uloop_timeout *timeout)
 	goto out;
 
 end_fault :
-	log_message(NAME, L_NOTICE, "download error: '%s'", fault_array[code].string);
+	log_message(NAME, L_DEBUG, "download error: '%s'", fault_array[code].string);
 	backup_update_fault_transfer_complete(node, code);
 
 out:
@@ -514,7 +514,7 @@ void cwmp_add_download(char *key, int delay, char *file_size, char *download_url
 	d->backup_node = node;
 	d->time_execute = time(NULL) + delay;
 	list_add_tail(&d->list, &cwmp->downloads);
-	log_message(NAME, L_NOTICE, "add download: delay = %d sec, url = %s, FileType = '%s', CommandKey = '%s'\n",
+	log_message(NAME, L_DEBUG, "add download: delay = %d sec, url = %s, FileType = '%s', CommandKey = '%s'\n",
 			delay, d->download_url, d->file_type, d->key);
 
 	uloop_timeout_set(&d->handler_timer, SECDTOMSEC * delay);
@@ -527,7 +527,7 @@ struct event *cwmp_add_event(int code, char *key, int method_id, int backup)
 
 	int type = event_code_array[code].type;
 
-	log_message(NAME, L_NOTICE, "add event '%s'", event_code_array[code].code);
+	log_message(NAME, L_DEBUG, "add event '%s'", event_code_array[code].code);
 
 	if (type == EVENT_SINGLE) {
 		list_for_each(p, &cwmp->events) {

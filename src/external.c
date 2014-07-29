@@ -184,7 +184,7 @@ static void external_add_json_obj(json_object *json_obj_out, char *object, char 
 
 int external_init()
 {
-	log_message(NAME, L_NOTICE, "external script init\n");
+	log_message(NAME, L_DEBUG, "external script init\n");
 	if (pipe(pfds_out) < 0)
 			return -1;
 	if (pipe(pfds_in) < 0)
@@ -227,7 +227,7 @@ int external_init()
 
 void external_exit()
 {
-	log_message(NAME, L_NOTICE, "external script exit\n");
+	log_message(NAME, L_DEBUG, "external script exit\n");
 
 	json_object *json_obj_out = json_object_new_object();
 	external_add_json_obj(json_obj_out, "command", "exit");
@@ -244,7 +244,7 @@ void external_exit()
 
 int external_action_parameter_execute(char *command, char *class, char *name, char *arg)
 {
-	log_message(NAME, L_NOTICE, "external: execute %s %s %s %s\n",
+	log_message(NAME, L_DEBUG, "external: execute %s %s %s %s\n",
 			command, class, name, arg?arg:"");
 
 	json_object *json_obj_out = json_object_new_object();
@@ -260,7 +260,7 @@ int external_action_parameter_execute(char *command, char *class, char *name, ch
 
 int external_action_simple_execute(char *command, char *class, char *arg)
 {
-	log_message(NAME, L_NOTICE, "external: execute %s %s %s\n",
+	log_message(NAME, L_DEBUG, "external: execute %s %s %s\n",
 			command, class, arg?arg:"");
 
 	json_object *json_obj_out = json_object_new_object();
@@ -275,7 +275,7 @@ int external_action_simple_execute(char *command, char *class, char *arg)
 
 int external_action_download_execute(char *url, char *file_type, char *file_size, char *user_name, char *password)
 {
-	log_message(NAME, L_NOTICE, "external: execute download\n", url);
+	log_message(NAME, L_DEBUG, "external: execute download\n", url);
 
 	json_object *json_obj_out = json_object_new_object();
 	external_add_json_obj(json_obj_out, "command", "download");

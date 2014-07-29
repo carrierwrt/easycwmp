@@ -304,7 +304,7 @@ void config_exit(void)
 
 void config_load(void)
 {
-	log_message(NAME, L_NOTICE, "configuration (re)load\n");
+	log_message(NAME, L_DEBUG, "configuration (re)load\n");
 
 	uci_easycwmp = config_init_package("easycwmp");
 

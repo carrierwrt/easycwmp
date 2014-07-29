@@ -92,7 +92,7 @@ http_client_init(void)
 	if (!config->acs->ssl_verify)
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
-	log_message(NAME, L_NOTICE, "configured acs url %s", http_c.url);
+	log_message(NAME, L_DEBUG, "configured acs url %s", http_c.url);
 	return 0;
 }
 
@@ -156,7 +156,7 @@ http_send_message(char *msg_out, char **msg_in)
 	curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
 	if (res || (httpCode != 200 && httpCode != 204)) {
-		log_message(NAME, L_NOTICE, "sending http message failed\n");
+		log_message(NAME, L_WARNING, "sending http message failed\n");
 		return -1;
 	}
 
@@ -188,7 +188,7 @@ http_server_init(void)
 	DDF("port: '%s'\n", config->local->port);
 	DDF("--- HTTP SERVER CONFIGURATION ---\n");
 
-	log_message(NAME, L_NOTICE, "http server initialized\n");
+	log_message(NAME, L_DEBUG, "http server initialized\n");
 }
 
 static void
@@ -287,7 +287,7 @@ http_del_client(struct uloop_process *uproc, int ret)
 	/* child terminated ; check return code */
 	if (WIFEXITED(ret) && WEXITSTATUS(ret) == 0) {
 		DDF("+++ HTTP SERVER CONNECTION SUCCESS +++\n");
-		log_message(NAME, L_NOTICE, "acs initiated connection");
+		log_message(NAME, L_DEBUG, "acs initiated connection");
 		cwmp_connection_request(EVENT_CONNECTION_REQUEST);
 	} else {
 		DDF("+++ HTTP SERVER CONNECTION FAILED +++\n");

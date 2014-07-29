@@ -62,7 +62,7 @@ easycwmpd_handle_notify(struct ubus_context *ctx, struct ubus_object *obj,
 	if (!tb[NOTIFY_VALUE])
 		return UBUS_STATUS_INVALID_ARGUMENT;
 
-	log_message(NAME, L_NOTICE, "triggered ubus notification parameter %s\n",
+	log_message(NAME, L_DEBUG, "triggered ubus notification parameter %s\n",
 			blobmsg_data(tb[NOTIFY_PARAM]));
 	cwmp_add_notification(blobmsg_data(tb[NOTIFY_PARAM]),
 			blobmsg_data(tb[NOTIFY_VALUE]),
@@ -94,7 +94,7 @@ easycwmpd_handle_inform(struct ubus_context *ctx, struct ubus_object *obj,
 	if (!tb[INFORM_EVENT])
 		return UBUS_STATUS_INVALID_ARGUMENT;
 
-	log_message(NAME, L_NOTICE, "triggered ubus inform %s\n",
+	log_message(NAME, L_DEBUG, "triggered ubus inform %s\n",
 			blobmsg_data(tb[INFORM_EVENT]));
 	tmp = cwmp_get_int_event_code(blobmsg_data(tb[INFORM_EVENT]));
 	cwmp_connection_request(tmp);
@@ -130,13 +130,13 @@ easycwmpd_handle_command(struct ubus_context *ctx, struct ubus_object *obj,
 	char *info;
 
 	if (!strcmp("reload", cmd)) {
-		log_message(NAME, L_NOTICE, "triggered ubus reload\n");
+		log_message(NAME, L_DEBUG, "triggered ubus reload\n");
 		easycwmp_reload();
 		blobmsg_add_u32(&b, "status", 0);
 		if (asprintf(&info, "easycwmpd reloaded") == -1)
 			return -1;
 	} else if (!strcmp("stop", cmd)) {
-		log_message(NAME, L_NOTICE, "triggered ubus stop\n");
+		log_message(NAME, L_DEBUG, "triggered ubus stop\n");
 		ubus_timer.cb = ubus_easycwmpd_stop_callback;
 		uloop_timeout_set(&ubus_timer, 1000);
 		blobmsg_add_u32(&b, "status", 0);

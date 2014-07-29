@@ -366,7 +366,7 @@ find_method:
 		goto fault_out;
 	}
 	method = NULL;
-	log_message(NAME, L_NOTICE, "received %s method from the ACS\n", c);
+	log_message(NAME, L_DEBUG, "received %s method from the ACS\n", c);
 	for (i = 0; i < ARRAY_SIZE(rpc_methods); i++) {
 		if (!strcmp(c, rpc_methods[i].name)) {
 			method = &rpc_methods[i];
@@ -765,7 +765,7 @@ static int xml_handle_get_rpc_methods(mxml_node_t *body_in,
 		mxmlElementSetAttr(method_list, "soap_enc:arrayType", attr_value);
 		free(attr_value);
 
-		log_message(NAME, L_NOTICE, "send GetRPCMethodsResponse to the ACS\n");
+		log_message(NAME, L_DEBUG, "send GetRPCMethodsResponse to the ACS\n");
 		return 0;
 }
 
@@ -863,7 +863,7 @@ int xml_handle_set_parameter_values(mxml_node_t *body_in,
 	free(status);
 	free(parameter_value);
 
-	log_message(NAME, L_NOTICE, "send SetParameterValuesResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send SetParameterValuesResponse to the ACS\n");
 	return 0;
 
 fault_out:
@@ -965,7 +965,7 @@ int xml_handle_get_parameter_values(mxml_node_t *body_in,
 	FREE(c);
 #endif
 
-	log_message(NAME, L_NOTICE, "send GetParameterValuesResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send GetParameterValuesResponse to the ACS\n");
 	return 0;
 fault_out:
 	xml_create_generic_fault_message(body_out, code);
@@ -1070,7 +1070,7 @@ int xml_handle_get_parameter_names(mxml_node_t *body_in,
 	FREE(c);
 #endif
 
-	log_message(NAME, L_NOTICE, "send GetParameterNamesResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send GetParameterNamesResponse to the ACS\n");
 	return 0;
 fault_out:
 	xml_create_generic_fault_message(body_out, code);
@@ -1167,7 +1167,7 @@ static int xml_handle_get_parameter_attributes(mxml_node_t *body_in,
 	FREE(c);
 #endif
 
-	log_message(NAME, L_NOTICE, "send GetParameterAttributesResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send GetParameterAttributesResponse to the ACS\n");
 	return 0;
 fault_out:
 	xml_create_generic_fault_message(body_out, code);
@@ -1271,7 +1271,7 @@ static int xml_handle_set_parameter_attributes(mxml_node_t *body_in,
 	free(success);
 	free(fault);
 
-	log_message(NAME, L_NOTICE, "send SetParameterAttributesResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send SetParameterAttributesResponse to the ACS\n");
 	return 0;
 
 fault_out:
@@ -1406,7 +1406,7 @@ static int xml_handle_download(mxml_node_t *body_in,
 	b = mxmlNewText(b, 0, UNKNOWN_TIME);
 	if (!b) return -1;
 
-	log_message(NAME, L_NOTICE, "send DownloadResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send DownloadResponse to the ACS\n");
 	return 0;
 
 fault_out:
@@ -1431,7 +1431,7 @@ static int xml_handle_factory_reset(mxml_node_t *node,
 
 	cwmp_add_handler_end_session(ENDS_FACTORY_RESET);
 
-	log_message(NAME, L_NOTICE, "send FactoryResetResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send FactoryResetResponse to the ACS\n");
 	return 0;
 }
 
@@ -1474,7 +1474,7 @@ static int xml_handle_reboot(mxml_node_t *node,
 	backup_add_event(EVENT_M_REBOOT, command_key, 0);
 	cwmp_add_handler_end_session(ENDS_REBOOT);
 
-	log_message(NAME, L_NOTICE, "send RebootResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send RebootResponse to the ACS\n");
 	return 0;
 
 fault_out:
@@ -1529,7 +1529,7 @@ static int xml_handle_schedule_inform(mxml_node_t *body_in,
 		goto fault_out;
 	}
 
-	log_message(NAME, L_NOTICE, "send ScheduleInformResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send ScheduleInformResponse to the ACS\n");
 	return 0;
 fault_out:
 	xml_create_generic_fault_message(body_out, code);
@@ -1620,7 +1620,7 @@ static int xml_handle_AddObject(mxml_node_t *body_in,
 	free(status);
 	free(fault);
 
-	log_message(NAME, L_NOTICE, "send AddObjectResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send AddObjectResponse to the ACS\n");
 	return 0;
 
 fault_out:
@@ -1714,7 +1714,7 @@ static int xml_handle_DeleteObject(mxml_node_t *body_in,
 	free(status);
 	free(fault);
 
-	log_message(NAME, L_NOTICE, "send DeleteObjectResponse to the ACS\n");
+	log_message(NAME, L_DEBUG, "send DeleteObjectResponse to the ACS\n");
 	return 0;
 
 fault_out:
@@ -1768,7 +1768,7 @@ mxml_node_t *xml_create_generic_fault_message(mxml_node_t *body, int code)
 	u = mxmlNewText(t, 0, fault_array[code].string);
 	if (!u) return NULL;
 
-	log_message(NAME, L_NOTICE, "send Fault: %s: '%s'\n", fault_array[code].code, fault_array[code].string);
+	log_message(NAME, L_DEBUG, "send Fault: %s: '%s'\n", fault_array[code].code, fault_array[code].string);
 	return b;
 }
 

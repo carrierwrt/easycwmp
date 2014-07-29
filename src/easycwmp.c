@@ -103,7 +103,7 @@ static void easycwmp_netlink_interface(struct nlmsghdr *nlh)
 		}
 
 		if ((addr != old_addr) && (old_addr != 0)) {
-			log_message(NAME, L_NOTICE, "ip address of the interface %s is changed\n",	if_name);
+			log_message(NAME, L_DEBUG, "ip address of the interface %s is changed\n",	if_name);
 			cwmp_add_event(EVENT_VALUE_CHANGE, NULL, 0, EVENT_NO_BACKUP);
 			cwmp_add_inform_timer();
 		}
@@ -118,7 +118,7 @@ static void easycwmp_netlink_interface(struct nlmsghdr *nlh)
 
 	if (strlen(if_addr) == 0) return;
 
-	log_message(NAME, L_NOTICE, "interface %s has ip %s\n",
+	log_message(NAME, L_DEBUG, "interface %s has ip %s\n",
 			if_name, if_addr);
 }
 
@@ -239,7 +239,7 @@ int main (int argc, char **argv)
 		}
 	}
 
-	log_message(NAME, L_NOTICE, "daemon started\n");
+	log_message(NAME, L_DEBUG, "daemon started\n");
 
 	setlocale(LC_CTYPE, "");
 	umask(0037);
@@ -302,7 +302,7 @@ int main (int argc, char **argv)
 		}
 	}
 
-	log_message(NAME, L_NOTICE, "entering main loop\n");
+	log_message(NAME, L_DEBUG, "entering main loop\n");
 	uloop_run();
 
 	ubus_exit();
@@ -316,7 +316,7 @@ int main (int argc, char **argv)
 
 	closelog();
 
-	log_message(NAME, L_NOTICE, "exiting\n");
+	log_message(NAME, L_DEBUG, "exiting\n");
 	return 0;
 }
 
