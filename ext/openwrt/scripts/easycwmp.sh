@@ -6,6 +6,7 @@
 # Copyright (C) 2011-2012 Luka Perkov <freecwmp@lukaperkov.net>
 
 . /lib/functions.sh
+. /lib/functions/network.sh
 . /usr/share/libubox/jshn.sh
 . /usr/share/shflags/shflags.sh
 . /usr/share/easycwmp/defaults
@@ -186,11 +187,7 @@ if [ -z "$action" ]; then
 	exit 1
 fi
 
-load_script() {
-	. $1 
-}
-
-load_function() {
+register_function() {
 	get_functions="$get_functions get_$1"
 	set_functions="$set_functions set_$1"
 	add_object_functions="$add_object_functions add_object_$1"
@@ -198,14 +195,9 @@ load_function() {
 	build_instances_$1  2> /dev/null
 }
 
-handle_scripts() {
-	local section="$1"
-	config_list_foreach "$section" 'location' load_script
-	config_list_foreach "$section" 'function' load_function
-}
-
 config_load easycwmp
-config_foreach handle_scripts "scripts"
+
+include /usr/share/easycwmp/functions
 
 handle_action() {
 	if [ "$action" = "get_value" ]; then

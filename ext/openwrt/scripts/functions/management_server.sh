@@ -694,3 +694,5 @@ build_instances_management_server() { return 0; }
 add_object_management_server() { return $E_INVALID_PARAMETER_NAME; }
 
 delete_object_management_server() { return $E_INVALID_PARAMETER_NAME; }
+
+register_function management_server

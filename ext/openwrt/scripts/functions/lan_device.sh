@@ -315,3 +315,5 @@ case "$1" in
 esac
 return $E_INVALID_PARAMETER_NAME
 }
+
+register_function lan_device

@@ -444,3 +444,5 @@ build_instances_wan_device() { return 0; }
 add_object_wan_device() { return $E_INVALID_PARAMETER_NAME; }
 
 delete_object_wan_device() { return $E_INVALID_PARAMETER_NAME; }
+
+register_function wan_device

@@ -19,17 +19,3 @@ config acs
 	option periodic_enable '1'
 	option periodic_interval '100'
 
-config scripts
-	# load OpenWrt generic network functions
-	list location /lib/functions/network.sh
-	# load easycwmp common functions
-	list location /usr/share/easycwmp/functions/common
-	# easycwmp specific functions
-	list location /usr/share/easycwmp/functions/device_info
-	list function device_info
-	list location /usr/share/easycwmp/functions/lan_device
-	list function lan_device
-	list location /usr/share/easycwmp/functions/management_server
-	list function management_server
-	list location /usr/share/easycwmp/functions/wan_device
-	list function wan_device

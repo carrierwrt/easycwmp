@@ -362,3 +362,5 @@ build_instances_device_info() { return 0; }
 add_object_device_info() { return $E_INVALID_PARAMETER_NAME; }
 
 delete_object_device_info() { return $E_INVALID_PARAMETER_NAME; }
+
+register_function device_info
