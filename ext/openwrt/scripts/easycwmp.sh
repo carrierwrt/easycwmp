@@ -200,7 +200,6 @@ load_function() {
 
 handle_scripts() {
 	local section="$1"
-	config_get prefix "$section" "prefix"
 	config_list_foreach "$section" 'location' load_script
 	config_list_foreach "$section" 'function' load_function
 }
