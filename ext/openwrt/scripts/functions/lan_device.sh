@@ -15,7 +15,7 @@ local permissions="1"
 case "$action" in
 	get_value)
 	val=`$UCI_GET wireless.${uci_iface}.disabled 2> /dev/null`
-	[ "$val" = "1" ] && val="0" || val="1"
+	[ "$val" = "1" ] && val="false" || val="true"
 	;;
 	get_name)
 	[ "$nl" = "1" ] && return $E_INVALID_ARGUMENTS
@@ -44,7 +44,7 @@ local uci_iface="$2"
 local val="$3"
 case $action in
 	set_value)
-	[ "$val" = "1" ] && val="0" || val="1"
+	[ "$val" = "1" -o "$val" = "true" ] && val="0" || val="1"
 	execute_command_in_apply_service "wifi"
 	$UCI_SET wireless.${uci_iface}.disabled="$val"
 	;;
