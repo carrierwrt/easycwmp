@@ -203,13 +203,9 @@ local val=""
 local param="InternetGatewayDevice.DeviceInfo.DeviceLog"
 local permissions="0"
 case "$action" in
-	#get_value)
-	#if [ ${FLAGS_last} -eq ${FLAGS_TRUE} ]; then
-	#	val=`dmesg | tail -n1`
-	#else
-	#	val=`dmesg | tail -n10`
-	#fi
-	#;;
+	get_value)
+	val=`logread | tail -10`
+	;;
 	get_name)
 	[ "$nl" = "1" ] && return $E_INVALID_ARGUMENTS
 	;;
