@@ -81,9 +81,11 @@ local parm="InternetGatewayDevice.WANDevice.1.WANConnectionDevice.2.WANPPPConnec
 local permissions="1"
 case "$action" in
 	get_value)
-	val=`$UCI_GET network.wan.auto 2> /dev/null`
-	if [ -z $val ]; then
-		val="1"
+	proto=`$UCI_GET network.wan.proto 2> /dev/null`
+	if [ "$proto" = "ppp" -o "$proto" = "pppoe" -o "$proto" = "pppoa" ]; then
+		val="true"
+	else
+		val="false"
 	fi
 	;;
 	get_name)
@@ -102,13 +104,8 @@ local val=$1
 local parm="InternetGatewayDevice.WANDevice.1.WANConnectionDevice.2.WANPPPConnection.1.Enable"
 case $action in
 	set_value)
-	if [ "$val" -eq 0 ]; then
-		$UCI_SET network.wan.auto=0
-		ifdown wan &
-	elif [ "$val" -eq 1 ]; then
-		$UCI_SET network.wan.auto=1
-		ifup wan &
-	fi
+	# TODO: How do we switch on PPP...?
+	return $E_INTERNAL_ERROR
 	;;
 	set_notification)
 	easycwmp_set_parameter_notification "$parm" "$val"
@@ -425,7 +422,7 @@ case "$1" in
 	;;
 	InternetGatewayDevice.WANDevice.1.WANConnectionDevice.2.WANPPPConnection.1.Enable)
 	set_wan_device_wan_ppp_enable "$2"
-	return 0
+	return $?
 	;;
 	InternetGatewayDevice.WANDevice.1.WANConnectionDevice.2.WANPPPConnection.1.Username)
 	set_wan_device_wan_ppp_username "$2"
