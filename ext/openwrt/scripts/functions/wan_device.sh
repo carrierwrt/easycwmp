@@ -33,7 +33,7 @@ local permissions="0"
 case "$action" in
 	get_value)
 	if [ -z "$default_wan_device_mng_interface_ip" ]; then
-		network_get_ipaddr val "$(uci get easycwmp.@local[0].interface)"
+		val=`ifconfig "$(uci get easycwmp.@local[0].interface)" | grep -o -E '([[:digit:]]{1,3}\.){3}[[:digit:]]{1,3}' | head -1`
 	else
 		val=$default_wan_device_mng_interface_ip
 	fi
@@ -57,7 +57,7 @@ local permissions="0"
 case "$action" in
 	get_value)
 	if [ -z "$default_wan_device_mng_interface_mac" ]; then
-		val=`ifconfig "$(uci get easycwmp.@local[0].interface)" | awk '/HWaddr/ { print $5 }'`
+		val=`ifconfig "$(uci get easycwmp.@local[0].interface)" | grep -o -E '([[:xdigit:]]{2}:){5}[[:xdigit:]]{2}'`
 	else
 		val=$default_wan_device_mng_interface_mac
 	fi
